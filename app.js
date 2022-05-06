@@ -1,7 +1,12 @@
 const express = require('express');
 var bodyParser = require('body-parser')
 const app = express();
-// const MERGE_PDFS_API = require('./routes/merge-pdfs-api');
+const auth = require('./routes/auth');
+const budget = require('./routes/budget');
+const dashboard = require('./routes/dashboard');
+const faqs = require('./routes/faqs');
+const paymentReminder = require('./routes/payment-reminder');
+const profile = require('./routes/profile');
 
 app.use(bodyParser.urlencoded({ extended: true}));
 app.use(bodyParser.json());
@@ -17,6 +22,11 @@ app.get('/', (req,res,next) => {
     res.send('money-wiser-backend app is running!');
 });
 
-// app.use('/api/merge-pdfs',MERGE_PDFS_API);
+app.use('/api/auth',auth);
+app.use('/api/budget',budget);
+app.use('/api/dashboard',dashboard);
+app.use('/api/faqs',faqs);
+app.use('/api/payment-reminder',paymentReminder);
+app.use('/api/profile',profile);
 
 module.exports = app;
