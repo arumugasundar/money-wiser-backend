@@ -1,12 +1,27 @@
 const express = require('express');
+const mongoose = require('mongoose');
 var bodyParser = require('body-parser')
-const app = express();
+const dotenv = require('dotenv');
+dotenv.config();
+
 const auth = require('./routes/auth');
 const budget = require('./routes/budget');
 const dashboard = require('./routes/dashboard');
 const faqs = require('./routes/faqs');
 const paymentReminder = require('./routes/payment-reminder');
 const profile = require('./routes/profile');
+
+const app = express();
+const MONGO_DB_URL = process.env.MONGO_DB_URL;
+
+mongoose.connect(MONGO_DB_URL
+  ,{useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => {
+    console.log('Connected to Database!');
+  })
+  .catch((err) =>{
+    console.log('Connection Failed!');
+  });
 
 app.use(bodyParser.urlencoded({ extended: true}));
 app.use(bodyParser.json());
