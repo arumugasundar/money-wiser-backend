@@ -23,12 +23,11 @@ router.get('/protected', isAuthenticated, async(req,res) => {
 });
 
 router.post('/login', async (req,res) => {
-    const {mail, password} = req.body.data;
-    if(!mail || !password) return res.json({message: "Invalid Credentials"});
-    const user = await UserModel.findOne({ mail: mail});
+    const {email, password} = req.body;
+    const user = await UserModel.findOne({ email: email});
     if(user){
         if(await bcrypt.compare(password,user.password)){
-            const payload =  {mail};
+            const payload =  {email};
             jwt.sign(payload,"secret",{expiresIn:"1d"}, (err,token) => {
                 if (err) console.log(err);
                 else{
@@ -46,23 +45,22 @@ router.post('/login', async (req,res) => {
     }
 });
 
-router.post('/signup', async (req,res) => {
-    const { mail, password, confirmPassword } = req.body.data;
-    if(!mail || !password) return res.json({message: "Invalid Credentials"});
-    if(password !== confirmPassword) return res.json({message: "Password Mismatch"});
-    const userExists = await UserModel.findOne({ mail: mail});
+router.post('/register', async (req,res) => {
+    const { name, email, password } = req.body;
+    const userExists = await UserModel.findOne({ email: email});
     if(userExists)
         return res.json({message:"User already exists"});
     else{
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password,salt);
         const newUser = new UserModel({
-            mail: mail,
+            name: name,
+            email: email,
             password: hashedPassword});
         newUser
             .save()
-            .then(userData => {
-                return res.json({message:"User created", userData});
+            .then( () => {
+                return res.json({message:"User created"});
             })
             .catch(err => {
                 return res.json({message:err});
