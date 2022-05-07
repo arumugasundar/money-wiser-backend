@@ -25,6 +25,7 @@ router.get('/protected', isAuthenticated, async(req,res) => {
 router.post('/login', async (req,res) => {
     const {email, password} = req.body;
     const user = await UserModel.findOne({ email: email});
+    console.log(user);
     if(user){
         if(await bcrypt.compare(password,user.password)){
             const payload =  {email};

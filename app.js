@@ -20,7 +20,7 @@ mongoose.connect(MONGO_DB_URL
     console.log('Connected to Database!');
   })
   .catch((err) =>{
-    console.log('Connection Failed!');
+    console.log('Connection Failed!',err);
   });
 
 app.use(bodyParser.urlencoded({ extended: true}));
